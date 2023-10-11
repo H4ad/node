@@ -74,9 +74,7 @@ class BindingData : public SnapshotableObject {
 
   static void BigIntImpl(BindingData* receiver);
 
-  static void FastBigInt(v8::Local<v8::Value> receiver) {
-    BigIntImpl(FromV8Value(receiver));
-  }
+  static uint64_t FastBigInt(v8::Local<v8::Value> receiver);
 
   static void SlowBigInt(const v8::FunctionCallbackInfo<v8::Value>& args);
 

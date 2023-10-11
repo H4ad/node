@@ -37,6 +37,7 @@ namespace node {
 
 using v8::Array;
 using v8::ArrayBuffer;
+using v8::BigInt;
 using v8::CFunction;
 using v8::Context;
 using v8::Float64Array;
@@ -477,7 +478,7 @@ BindingData::BindingData(Realm* realm, v8::Local<v8::Object> object)
 }
 
 v8::CFunction BindingData::fast_number_(v8::CFunction::Make(FastNumber));
-v8::CFunction BindingData::fast_bigint_(v8::CFunction::Make(FastBigInt));
+v8::CFunction BindingData::fast_bigint_(v8::CFunctionBuilder().Fn(FastBigInt).Build<v8::CFunctionInfo::Int64Representation::kBigInt>());
 
 void BindingData::AddMethods(Isolate* isolate, Local<ObjectTemplate> target) {
   SetFastMethodNoSideEffect(
@@ -533,8 +534,15 @@ void BindingData::BigIntImpl(BindingData* receiver) {
   fields[0] = t;
 }
 
+uint64_t BindingData::FastBigInt(v8::Local<v8::Value> receiver) {
+  return uv_hrtime();
+}
+
 void BindingData::SlowBigInt(const FunctionCallbackInfo<Value>& args) {
-  BigIntImpl(FromJSObject<BindingData>(args.Holder()));
+  uint64_t t = uv_hrtime();
+  Environment* env = Environment::GetCurrent(args);
+
+  args.GetReturnValue().Set(BigInt::NewFromUnsigned(env->isolate(), t));
 }
 
 void BindingData::SlowNumber(const v8::FunctionCallbackInfo<v8::Value>& args) {
