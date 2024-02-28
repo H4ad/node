@@ -99,26 +99,26 @@ export function toHTML({ input, content, filename, nodeVersion, versions }) {
 
   const id = filename.replace(/\W+/g, '-');
 
-  let HTML = template.replace('__ID__', id)
+  let HTML = template.replace(/__ID__/g, id)
                      .replace(/__FILENAME__/g, filename)
                      .replace('__SECTION__', content.section)
                      .replace(/__VERSION__/g, nodeVersion)
                      .replace(/__TOC__/g, content.toc)
-                     .replace('__JS_FLAVORED_DYNAMIC_CSS__', buildCSSForFlavoredJS(dynamicSizesForThisFile))
+                     .replace(/__JS_FLAVORED_DYNAMIC_CSS__/g, buildCSSForFlavoredJS(dynamicSizesForThisFile))
                      .replace(/__TOC_PICKER__/g, tocPicker(id, content))
                      .replace(/__GTOC_PICKER__/g, gtocPicker(id))
                      .replace(/__GTOC__/g, gtocHTML.replace(
                        `class="nav-${id}"`, `class="nav-${id} active"`))
-                     .replace('__EDIT_ON_GITHUB__', editOnGitHub(filename))
-                     .replace('__CONTENT__', processContent(content));
+                     .replace(/__EDIT_ON_GITHUB__/g, editOnGitHub(filename))
+                     .replace(/__CONTENT__/g, processContent(content));
 
   const docCreated = input.match(
     /<!--\s*introduced_in\s*=\s*v([0-9]+)\.([0-9]+)\.[0-9]+\s*-->/);
   if (docCreated) {
-    HTML = HTML.replace('__ALTDOCS__', altDocs(filename, docCreated, versions));
+    HTML = HTML.replace(/__ALTDOCS__/g, altDocs(filename, docCreated, versions));
   } else {
     console.error(`Failed to add alternative version links to ${filename}`);
-    HTML = HTML.replace('__ALTDOCS__', '');
+    HTML = HTML.replace(/__ALTDOCS__/g, '');
   }
 
   return HTML;

@@ -159,16 +159,16 @@ em code {
   font-style: normal;
 }
 
-#changelog #gtoc {
+#changelog .gtoc {
   display: none;
 }
 
-#gtoc {
+.gtoc {
   margin-top: .5rem;
   margin-bottom: 1rem;
 }
 
-#gtoc > ul {
+.gtoc > ul {
   list-style: none;
   margin-left: 0;
   line-height: 1.5rem;
@@ -195,12 +195,12 @@ li.picker-header .expanded-arrow {
   display: none;
 }
 
-li.picker-header.expanded .collapsed-arrow, 
+li.picker-header.expanded .collapsed-arrow,
 :root:not(.has-js) li.picker-header:hover .collapsed-arrow {
   display: none;
 }
 
-li.picker-header.expanded .expanded-arrow, 
+li.picker-header.expanded .expanded-arrow,
 :root:not(.has-js) li.picker-header:hover .expanded-arrow {
   display: inline-block;
 }
@@ -210,7 +210,7 @@ li.picker-header.expanded > a,
   border-radius: 2px 2px 0 0;
 }
 
-li.picker-header.expanded > .picker, 
+li.picker-header.expanded > .picker,
 :root:not(.has-js) li.picker-header:hover > .picker {
   display: block;
   z-index: 1;
@@ -820,7 +820,7 @@ kbd {
 }
 
 .header {
-  position: sticky;
+  position: block;
   top: -1px;
   z-index: 1;
   padding-top: 1rem;
@@ -847,16 +847,23 @@ kbd {
   font-weight: 700;
 }
 
-.header.is-pinned .header-container {
+.gtoc-pinned {
   display: none;
 }
 
-.header.is-pinned .pinned-header {
-  display: inline;
-}
+.header.is-pinned .gtoc-pinned {
+  display: block;
 
-.header.is-pinned #gtoc {
-  margin: 0;
+  position: fixed;
+  top: -1px;
+  z-index: 1;
+  padding-top: 1rem;
+  background-color: var(--color-fill-app);
+
+  width: 100%;
+  border: medium none;
+  border-bottom: 1px solid var(--gray5);
+  margin: 0 0 1rem;
 }
 
 .header-container {
@@ -877,28 +884,28 @@ kbd {
 }
 
 @media only screen and (min-width: 601px) {
-  #gtoc > ul > li {
+  .gtoc > ul > li {
     display: inline;
     border-right: 1px currentColor solid;
     margin-right: .4rem;
     padding-right: .4rem;
   }
 
-  #gtoc > ul > li:last-child {
+  .gtoc > ul > li:last-child {
     border-right: none;
     margin-right: 0;
     padding-right: 0;
   }
 
-  .header #gtoc > ul > li.pinned-header {
+  .header .gtoc > ul > li.pinned-header {
     display: none;
   }
 
-  .header.is-pinned #gtoc > ul > li.pinned-header {
+  .header.is-pinned .gtoc > ul > li.pinned-header {
     display: inline;
   }
 
-  #gtoc > ul > li.gtoc-picker-header {
+  .gtoc > ul > li.gtoc-picker-header {
     display: none;
   }
 }
@@ -918,7 +925,7 @@ kbd {
     display: none;
   }
 
-  #gtoc > ul > li.gtoc-picker-header {
+  .gtoc > ul > li.gtoc-picker-header {
     display: inline;
   }
 }
@@ -975,7 +982,7 @@ kbd {
 
 .copy-button {
   float: right;
-  
+
   outline: none;
   font-size: 10px;
   color: #fff;
@@ -1023,7 +1030,7 @@ kbd {
   .api_metadata,
   #toc,
   .srclink,
-  #gtoc,
+  .gtoc,
   .mark {
     display: none;
   }
