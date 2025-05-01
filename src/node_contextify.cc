@@ -1064,7 +1064,7 @@ void ContextifyScript::New(const FunctionCallbackInfo<Value>& args) {
                       host_defined_options);
   ScriptCompiler::Source source(code, origin, cached_data);
   ScriptCompiler::CompileOptions compile_options =
-      ScriptCompiler::kNoCompileOptions;
+      ScriptCompiler::kFollowCompileHintsMagicComment;
 
   if (source.GetCachedData() != nullptr)
     compile_options = ScriptCompiler::kConsumeCodeCache;
@@ -1482,8 +1482,17 @@ void ContextifyContext::CompileFunction(
   if (source.GetCachedData() != nullptr) {
     options = ScriptCompiler::kConsumeCodeCache;
   } else {
-    options = ScriptCompiler::kNoCompileOptions;
+    options = ScriptCompiler::kFollowCompileHintsMagicComment;
   }
+
+  Utf8Value code_str(env->isolate(), args[0]);
+  Utf8Value filename_str(env->isolate(), args[1]);
+
+  std::cout << "===========" << std::endl;
+  std::cout << "Contextify Compile Filename: " << filename_str.ToStringView() << std::endl;
+  std::cout << "Options: " << options << std::endl;
+  std::cout << "Code:\n" << code_str.ToStringView() << std::endl;
+  std::cout << "===========" << std::endl;
 
   Context::Scope scope(parsing_context);
 
@@ -1679,10 +1688,18 @@ static MaybeLocal<Function> CompileFunctionForCJSLoader(
   ScriptCompiler::Source source(code, origin, cached_data);
   ScriptCompiler::CompileOptions options;
   if (cached_data == nullptr) {
-    options = ScriptCompiler::kNoCompileOptions;
+    options = ScriptCompiler::kFollowCompileHintsMagicComment;
   } else {
     options = ScriptCompiler::kConsumeCodeCache;
   }
+
+  Utf8Value code_str(isolate, code);
+  Utf8Value filename_str(isolate, filename);
+  std::cout << "===========" << std::endl;
+  std::cout << "Contextify CJS Filename: " << filename_str.ToStringView() << std::endl;
+  std::cout << "Options: " << options << std::endl;
+  std::cout << "Code:\n" << code_str.ToStringView() << std::endl;
+  std::cout << "===========" << std::endl;
 
   LocalVector<String> params(isolate);
   if (is_cjs_scope) {

@@ -294,7 +294,7 @@ MaybeLocal<Function> BuiltinLoader::LookupAndCompileInternal(
   const bool has_cache = cached_data.data != nullptr;
   ScriptCompiler::CompileOptions options =
       has_cache ? ScriptCompiler::kConsumeCodeCache
-                : ScriptCompiler::kNoCompileOptions;
+                : ScriptCompiler::kFollowCompileHintsMagicComment;
   if (should_eager_compile_) {
     options = ScriptCompiler::kEagerCompile;
   } else if (!to_eager_compile_.empty()) {
@@ -302,6 +302,16 @@ MaybeLocal<Function> BuiltinLoader::LookupAndCompileInternal(
       options = ScriptCompiler::kEagerCompile;
     }
   }
+
+  Utf8Value code_str(isolate, source);
+  Utf8Value filename_str(isolate, filename);
+
+  std::cout << "===========" << std::endl;
+  std::cout << "Builtins Filename: " << filename_str.ToStringView() << std::endl;
+  std::cout << "Options: " << options << std::endl;
+  std::cout << "Code:\n" << code_str.ToStringView() << std::endl;
+  std::cout << "===========" << std::endl;
+
   ScriptCompiler::Source script_source(
       source,
       origin,

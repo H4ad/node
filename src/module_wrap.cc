@@ -392,10 +392,19 @@ MaybeLocal<Module> ModuleWrap::CompileSourceTextModule(
   ScriptCompiler::Source source(source_text, origin, cached_data);
   ScriptCompiler::CompileOptions options;
   if (cached_data == nullptr) {
-    options = ScriptCompiler::kNoCompileOptions;
+    options = ScriptCompiler::kFollowCompileHintsMagicComment;
   } else {
     options = ScriptCompiler::kConsumeCodeCache;
   }
+
+  Utf8Value code_str(isolate, source_text);
+  Utf8Value filename_str(isolate, url);
+
+  std::cout << "===========" << std::endl;
+  std::cout << "Wrap Filename: " << filename_str.ToStringView() << std::endl;
+  std::cout << "Options: " << options << std::endl;
+  std::cout << "Code:\n" << code_str.ToStringView() << std::endl;
+  std::cout << "===========" << std::endl;
 
   Local<Module> module;
   if (!ScriptCompiler::CompileModule(isolate, &source, options)
